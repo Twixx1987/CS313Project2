@@ -1,0 +1,16 @@
+{
+  "name": "node-pandemic-game-tracker",
+  "version": "1.0.0",
+  "description": "A traker and randomizer for the board game Pandemic",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shaun Densley",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "pg": "^7.6.1"
+  }
+}
