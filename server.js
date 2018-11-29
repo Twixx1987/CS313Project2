@@ -195,7 +195,6 @@ app.set("port", PORT)
         const id = req.query.id;
 
         // create the qry string
-        //TODO: FINISH QUERY STRING
         const qry = 
         `SELECT MAX(role.role_count) AS role_count, role.role_name AS role_name FROM (SELECT r.role_name AS role_name, COUNT(gp.role_id) AS role_count FROM (SELECT p.role_id AS role_id, p.user_id AS user_id FROM pandemic_player AS p JOIN pandemic_game AS g ON (p.game_id=g.game_id) WHERE g.game_complete = TRUE) AS gp JOIN pandemic_roles AS r ON (gp.role_id=r.role_id) WHERE gp.user_id=${id} GROUP BY r.role_name) AS role GROUP BY role_name ORDER BY role_count DESC, role_name`;
 
