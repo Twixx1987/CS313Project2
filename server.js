@@ -59,8 +59,6 @@ app.set("port", PORT)
     .set('view engine', 'ejs')
     // set the home page of this application
     .get('/', (req, res) => res.render('pages/index'))
-    // route to display the home page
-    .get('/home', (req, res) => res.render('pages/index'))
     // get all roles
     .get('/getRoles', (req, res) => {
         // create the qry string
