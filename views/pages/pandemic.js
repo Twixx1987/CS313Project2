@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <% include ../partials/header %>
-	<script>
-	/*********************************************************************
+/*********************************************************************
 * This function is derived from code on W3Schools.com
 * Source: https://www.w3schools.com/js/js_ajax_http_response.asp
 **********************************************************************/
@@ -58,8 +51,8 @@ function loadHome(xhttp) {
     // loop through the array object displaying each role
     for (let count = 0; count < length; count++) {
         // return a row with the role details to the text variable
-        text += "<tr><td>" + pandemicObj[count].version + "</td><td>" 
-			 + pandemicObj[count].role + "</td><td>" 
+        text += "<tr><td>" + pandemicObj[count].version + "</td><td>"
+			 + pandemicObj[count].role + "</td><td>"
 			 + pandemicObj[count].abilities + "</td></tr>";
     }
 
@@ -104,14 +97,3 @@ function loadPlayerRoleStats(xhttp) {
     // return 
     return;
 }
-</script>
-    <title>Tracker for the Game Pandemic</title>
-</head>
-<body onload="openJson('http://localhost:5000/getRoles', loadHome)">
-    <h1 class="pagetitle container">Tracker for the Game Pandemic</h1>
-    <% include ../partials/nav %>
-    <div id="mainContent" class="container">
-
-	</div>
-</body>
-</html>

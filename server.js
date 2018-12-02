@@ -52,13 +52,38 @@ function query(query, callback) {
 // initialize the applciation
 app.set("port", PORT)
     // set the static path
-    .use(express.static(path.join(__dirname, 'public')))
+    .use(express.static(path.join(__dirname, 'js')))
     // set the views path
     .set('views', path.join(__dirname, 'views'))
     // ste the view engine
     .set('view engine', 'ejs')
     // set the home page of this application
     .get('/', (req, res) => res.render('pages/index'))
+    // route to display the home page
+    .get('/home', (req, res) => res.render('pages/index'))
+    // get all roles
+    .get('/getRoles', (req, res) => {
+        // create the qry string
+        const qry = `SELECT r.role_name AS role, r.abilities AS abilities, v.version_name AS version FROM pandemic_roles AS r NATURAL JOIN pandemic_version AS v`;
+        
+        // call the function to query the databse
+        query(qry, function(error, result) {
+            // Make sure we got a row data, then prepare JSON to send back
+            if (error || result == null) {
+                // send the error back
+                res.status(500).json({success: false, data: error});
+                
+                // log the error on the server
+                console.log(error);
+            } else {
+                // create a variable to store the resulting data
+                var role = result;
+
+                // send the data back via the response
+                res.status(200).json(role);
+            }
+        });
+    })
     // get a role
     .get('/getRole', (req, res) => {
         // get the id from the url
@@ -196,7 +221,7 @@ app.set("port", PORT)
 
         // create the qry string
         const qry = 
-        `SELECT MAX(role.role_count) AS role_count, role.role_name AS role_name FROM (SELECT r.role_name AS role_name, COUNT(gp.role_id) AS role_count FROM (SELECT p.role_id AS role_id, p.user_id AS user_id FROM pandemic_player AS p JOIN pandemic_game AS g ON (p.game_id=g.game_id) WHERE g.game_complete = TRUE) AS gp JOIN pandemic_roles AS r ON (gp.role_id=r.role_id) WHERE gp.user_id=${id} GROUP BY r.role_name) AS role GROUP BY role_name ORDER BY role_count DESC, role_name`;
+        `SELECT MAX(role.role_count) AS play_count, role.role_name AS role FROM (SELECT r.role_name AS role_name, COUNT(gp.role_id) AS role_count FROM (SELECT p.role_id AS role_id, p.user_id AS user_id FROM pandemic_player AS p JOIN pandemic_game AS g ON (p.game_id=g.game_id) WHERE g.game_complete = TRUE) AS gp JOIN pandemic_roles AS r ON (gp.role_id=r.role_id) WHERE gp.user_id=${id} GROUP BY r.role_name) AS role GROUP BY role_name ORDER BY role_count DESC, role_name`;
 
         // call the function to query the databse
         query(qry, function(error, result) {
