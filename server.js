@@ -108,6 +108,29 @@ app.set("port", PORT)
             }
         });
     })
+    // get the Versions
+    .get('/getVersions', (req, res) => {
+        // create the qry string
+        const qry = `SELECT version_name AS version FROM pandemic_version`;
+
+        // call the function to query the databse
+        query(qry, function(error, result) {
+            // Make sure we got a row data, then prepare JSON to send back
+            if (error || result == null) {
+                // send the error back
+                res.status(500).json({success: false, data: error});
+                
+                // log the error on the server
+                console.log(error);
+            } else {
+                // create a variable to store the resulting data
+                var versions = result;
+
+                // send the data back via the response
+                res.status(200).json(versions);
+            }
+        });
+    })
     // get a Version
     .get('/getVersion', (req, res) => {
         // get the id from the url
@@ -219,7 +242,7 @@ app.set("port", PORT)
 
         // create the qry string
         const qry = 
-        `SELECT MAX(role.role_count) AS play_count, role.role_name AS role FROM (SELECT r.role_name AS role_name, COUNT(gp.role_id) AS role_count FROM (SELECT p.role_id AS role_id, p.user_id AS user_id FROM pandemic_player AS p JOIN pandemic_game AS g ON (p.game_id=g.game_id) WHERE g.game_complete = TRUE) AS gp JOIN pandemic_roles AS r ON (gp.role_id=r.role_id) WHERE gp.user_id=${id} GROUP BY r.role_name) AS role GROUP BY role_name ORDER BY role_count DESC, role_name`;
+        `SELECT r.role_name AS role, COUNT(gp.role_id) AS play_count FROM (SELECT p.role_id AS role_id, p.user_id AS user_id FROM pandemic_player AS p JOIN pandemic_game AS g ON (p.game_id=g.game_id) WHERE g.game_complete = TRUE AND p.user_id=${id}) AS gp JOIN pandemic_roles AS r ON (gp.role_id=r.role_id) GROUP BY r.role_name ORDER BY play_count DESC, role_name`;
 
         // call the function to query the databse
         query(qry, function(error, result) {

@@ -5,25 +5,25 @@
         <a class="nav-link menu-items flex-sm-fill text-sm-center btn btn-secondary" role="button" href="https://mighty-woodland-13602.herokuapp.com/homepage.php">CS313 Home</a>
       </li>
       <li class="nav-item dropdown flex-sm-fill text-sm-center">
-        <a class="nav-link menu-items flex-sm-fill text-sm-center btn btn-secondary" role="button" href="https://shrouded-sands-83723.herokuapp.com/">Home</a>
+        <button class="nav-link menu-items flex-sm-fill text-sm-center btn btn-secondary" id="home" onclick="loadHome()">Home</button>
       </li>
       <li class="nav-item dropdown flex-sm-fill text-sm-center">
         <a class="nav-link menu-items flex-sm-fill text-sm-center dropdown-toggle btn btn-secondary" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Games</a>
         <div class="dropdown-menu">
-          <a class="dropdown-item menu btn btn-secondary" role="button" href="">Host Game</a>
-          <a class="dropdown-item menu btn btn-secondary" role="button" href="">Join Game</a>
-          <a class="dropdown-item menu btn btn-secondary" role="button" href="">My Open Games</a>
-          <a class="dropdown-item menu btn btn-secondary" role="button" href="">My Runnigng Games</a>
+          <button class="dropdown-item menu btn btn-secondary" id="host">Host Game</button>
+          <button class="dropdown-item menu btn btn-secondary" id="join">Join Game</button>
+          <button class="dropdown-item menu btn btn-secondary" id="open">My Open Games</button>
+          <button class="dropdown-item menu btn btn-secondary" id="running">My Runnigng Games</button>
         </div>
       </li>
       <li class="nav-item flex-sm-fill text-sm-center">
-        <a class="nav-link menu-items flex-sm-fill text-sm-center btn btn-secondary" role="button" href="">Statistics</a>
+        <button class="nav-link menu-items flex-sm-fill text-sm-center btn btn-secondary" id="stats" onclick="loadPlayerRoleStats(1)">Statistics</button>
       </li>
       <li class="nav-item flex-sm-fill text-sm-center">
-        <a class="nav-link menu-items flex-sm-fill text-sm-center btn btn-secondary" role="button" href="">Settings</a>
+        <button class="nav-link menu-items flex-sm-fill text-sm-center btn btn-secondary" id="settings" onclick="loadSettings()">Settings</button>
       </li>
       <li class="nav-item dropdown flex-sm-fill text-sm-center">
-        <a class="nav-link menu-items flex-sm-fill text-sm-center btn btn-secondary" role="button" href="">Logout</a>
+        <button class="nav-link menu-items flex-sm-fill text-sm-center btn btn-secondary" id="logout">Logout</button>
       </li>
     </ul>
   </div>
