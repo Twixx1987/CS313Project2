@@ -26,7 +26,8 @@ function loadHome() {
         // loop through the array object displaying each role
         for (let count = 0; count < length; count++) {
             // return a row with the role details to the text variable
-            text += "<tr><td>" + result[count].version + "</td><td>"
+            text += "<tr id='Role_" + (count > 10 ? count : '0' + count) 
+                 + "'><td>" + result[count].version + "</td><td>"
                  + result[count].role + "</td><td>"
                  + result[count].abilities + "</td></tr>";
         }
@@ -169,7 +170,9 @@ function getRoleSettings() {
         // loop through the array object displaying each role
         for (let count = 0; count < length; count++) {
             // return a row with the role details to the text variable
-            text += "<tr><td>" + result[count].version + "</td><td>"
+            text += "<tr onclick='toggleSetting(this)' id='Role_"
+                 + (count > 10 ? count : '0' + count)
+                 + "'><td>" + result[count].version + "</td><td>"
                  + result[count].role + "</td><td>"
                  + result[count].abilities + "</td></tr>";
         }
@@ -180,4 +183,34 @@ function getRoleSettings() {
         // set the table as the content of the mainContent div
         $("#mainContent").append(text);
     });
+}
+
+/*************************************************************************
+*This function toggles the clicked role as selected/unselected
+***************************************************************************/
+function toggleSetting(element) {
+    // get the id of the element
+    let id = element.getAttribute("id");
+
+    // create an array to store the roles
+    let roles = [];
+
+    // get the roles from loacl storage
+    if (localStorage.pandemicRoles != "")
+        roles = JSON.parse(localStorage.pandemicRoles);
+
+    // check to see if the role is in storage
+    if (roles.indexOf(id) != -1) {
+        // remove the role from local storage
+        roles.splice(roles.indexOf(id), 1);
+    } else {
+        // add the role to the local stoarge list
+        roles.push(id);
+    }
+    // put the new roles list into local storage
+    localStorage.pandemicRoles = JSON.stringify(roles);
+
+    // toggle the classes for the selected card
+    element.classList.toggle("checked");
+    element.classList.toggle("unchecked");
 }

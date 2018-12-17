@@ -1,0 +1,17 @@
+﻿body
+{
+
+}
+
+table {
+    border: thin solid #1312a1;
+    border-collapse: collapse;
+}
+
+.unchecked {
+    background-color: white;
+}
+
+.checked {
+    background-color: #8c8cf2;
+}
