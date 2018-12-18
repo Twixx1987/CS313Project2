@@ -145,7 +145,7 @@ function getVersionSettings() {
         let length = result.length;
 
         // append a header indicating version selections
-        $("#mainContent").append("<h2>Version Selection</h2>");
+        $("#mainContent").append("<h2>Toggle Versions</h2>");
 
         // append a section for the version selection
         $("#mainContent").append("<div id='versionFlex' class='d-flex justify-content-around'></div>");
@@ -158,6 +158,31 @@ function getVersionSettings() {
 
         getRoleSettings();
     });
+}
+
+/*************************************************************************
+*This function selects each role from the selected version
+***************************************************************************/
+function selectVersion(element) {
+    // get the version id
+    let versionId = element.id;
+
+    // get an array of role elements
+    let roles = document.getElementsByClassName(versionId);
+
+    // loop through the cards resetting them to unchecked
+    for (let i = 0; i < roles.length; i++) {
+        // if the role is checked
+        if (roles[i].classList.contains("checked")) {
+            // add unchecked and remove checked
+            roles[i].classList.add("unchecked");
+            roles[i].classList.remove("checked");
+        } else {
+            // add unchecked and remove checked
+            roles[i].classList.add("checked");
+            roles[i].classList.remove("unchecked");
+        }
+    }
 }
 
 /*************************************************************************
@@ -183,7 +208,7 @@ function getRoleSettings() {
             // return a row with the role details to the text variable
             text += "<tr onclick='toggleSetting(this)' id='" + id + "' class='roles "
                  + (localStorage.pandemicRoles.indexOf(id) != -1 ? "checked" : "unchecked")
-                 + "'><td>" + result[count].version + "</td><td>"
+                 + " Version_" + result[count].version_id + "'><td>" + result[count].version + "</td><td>"
                  + result[count].role + "</td><td>"
                  + result[count].abilities + "</td></tr>";
         }
@@ -221,7 +246,7 @@ function toggleSetting(element) {
     // put the new roles list into local storage
     localStorage.pandemicRoles = JSON.stringify(roles);
 
-    // toggle the classes for the selected card
+    // toggle the classes for the selected role
     element.classList.toggle("checked");
     element.classList.toggle("unchecked");
 }
@@ -235,12 +260,12 @@ function clearSettings() {
         localStorage.removeItem('pandemicRoles');
     }
 
-    // get an array of card elements
+    // get an array of role elements
     let roles = document.getElementsByClassName('roles');
 
     // loop through the cards resetting them to unchecked
     for (let i = 0; i < roles.length; i++) {
-        // if the card is checked
+        // if the role is checked
         if (roles[i].classList.contains("checked")) {
             // add unchecked and remove checked
             roles[i].classList.add("unchecked");
@@ -258,12 +283,12 @@ function clearSettings() {
 * This function selects all the roles
 **********************************************************************/
 function applyAll() {
-    // get an array of card elements
+    // get an array of role elements
     let roleRows = document.getElementsByClassName('roles');
 
     // loop through the cards resetting them to unchecked
     for (let i = 0; i < roleRows.length; i++) {
-        // if the card is checked
+        // if the role is checked
         if (roleRows[i].classList.contains("unchecked")) {
             // add unchecked and remove checked
             roleRows[i].classList.add("checked");
@@ -285,4 +310,21 @@ function applyAll() {
         // put the new roles list into local storage
         localStorage.pandemicRoles = JSON.stringify(roles);
     }
+}
+
+function loadHost() {
+    // empty the main content div
+    $("#mainContent").empty();
+
+    // add a header to the page
+    $("#mainContent").append("<h2>Host Game</h2>");
+
+    // append the disclosure about hosting a game
+    $("#mainContent").append("<p>To host a game you first need to ensure that you have setup the character choices on the settings page. You will need to provide a Game ID to the players that will join. This ID will be provided once the game is initialized.</p>");
+
+    // append the anticipated player count input field
+    $("#mainContent").append("<input type='number' id='playerCount' min=2 max=5 name='playerCount' />");
+
+    // append the button to generate a game id
+    $("#mainContent").append("<br /><button class='btn btn-secondary' id='hostGame' onclick='hostGame()'>Host Game</button>");
 }

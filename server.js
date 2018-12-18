@@ -64,7 +64,7 @@ app.set("port", PORT)
     // get all roles
     .get('/getRoles', (req, res) => {
         // create the qry string
-        const qry = `SELECT r.role_id AS role_id, r.role_name AS role, r.abilities AS abilities, v.version_name AS version FROM pandemic_roles AS r NATURAL JOIN pandemic_version AS v`;
+        const qry = `SELECT r.role_id AS role_id, r.role_name AS role, r.abilities AS abilities, v.version_id AS version_id, v.version_name AS version FROM pandemic_roles AS r NATURAL JOIN pandemic_version AS v`;
         
         // call the function to query the databse
         query(qry, function(error, result) {
