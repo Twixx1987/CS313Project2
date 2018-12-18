@@ -3,6 +3,45 @@
 
 }
 
+#btnFlex, #versionFlex {
+    margin: 3px;
+    flex-wrap: wrap;
+}
+
+#btnFlex > button {
+  width: 250px;
+  position: relative;
+  margin: 4px;
+}
+
+#versionFlex > button {
+  width: 250px;
+  position: relative;
+  margin: 4px;
+}
+
+.btn-tertiary:hover {
+    color: #fff;
+    background-color: #1312a1;
+    border-color: #1312a1;
+}
+
+.btn-tertiary {
+    color: #fff;
+    background-color: #1717cf;
+    border-color: #1717cf;
+}
+
+td, tr {
+    border: thin solid #1312a1;
+}
+
+ th {
+    border: thin solid #1312a1;
+    background-color: #1312a1;
+    color: #e8e8fc;
+}
+
 table {
     border: thin solid #1312a1;
     border-collapse: collapse;
@@ -13,5 +52,5 @@ table {
 }
 
 .checked {
-    background-color: #8c8cf2;
+    background-color: #babaf7;
 }

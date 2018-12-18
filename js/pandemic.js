@@ -26,7 +26,8 @@ function loadHome() {
         // loop through the array object displaying each role
         for (let count = 0; count < length; count++) {
             // return a row with the role details to the text variable
-            text += "<tr id='Role_" + (count > 10 ? count : '0' + count) 
+            text += "<tr id='Role_"
+                 + (result[count].role_id > 9 ? result[count].role_id : '0' + result[count].role_id)
                  + "'><td>" + result[count].version + "</td><td>"
                  + result[count].role + "</td><td>"
                  + result[count].abilities + "</td></tr>";
@@ -126,6 +127,11 @@ function loadSettings() {
     // empty the main content div
     $("#mainContent").empty();
 
+    // add clear all and select all buttons inside a flexbox div
+    $("#mainContent").append("<div id='btnFlex' class='d-flex justify-content-around'></div>");
+    $("#btnFlex").append("<button id='clearSettings' onclick='clearSettings()' class='btn-secondary btn'>Clear Settings</button>");
+    $("#btnFlex").append("<button id='applyAll' onclick='applyAll()' class='btn-secondary btn'>Apply All</button>");
+
     // get teh settings
     getVersionSettings();
 }
@@ -138,13 +144,16 @@ function getVersionSettings() {
         // get the length of the object array
         let length = result.length;
 
-        // create a flexbox div
-        $("#mainContent").append("<div id='versionFlex' class='flex'>");
+        // append a header indicating version selections
+        $("#mainContent").append("<h2>Version Selection</h2>");
+
+        // append a section for the version selection
+        $("#mainContent").append("<div id='versionFlex' class='d-flex justify-content-around'></div>");
 
         // loop through the array object displaying each version
         for (let count = 0; count < length; count++) {
-            // append a div with the version name and a checkbox
-            $("#versionFlex").append("<div>" + result[count].version + "</div>");
+            // append a button with each version name
+            $("#versionFlex").append("<button id='Version_" + result[count].version_id + "' class='btn-tertiary btn' onclick='selectVersion(this)'>" + result[count].version + "</button>");
         }
 
         getRoleSettings();
@@ -169,9 +178,11 @@ function getRoleSettings() {
 
         // loop through the array object displaying each role
         for (let count = 0; count < length; count++) {
+            // get the role ID
+            let id = "Role_" + (result[count].role_id > 9 ? result[count].role_id : '0' + result[count].role_id);
             // return a row with the role details to the text variable
-            text += "<tr onclick='toggleSetting(this)' id='Role_"
-                 + (count > 10 ? count : '0' + count)
+            text += "<tr onclick='toggleSetting(this)' id='" + id + "' class='roles "
+                 + (localStorage.pandemicRoles.indexOf(id) != -1 ? "checked" : "unchecked")
                  + "'><td>" + result[count].version + "</td><td>"
                  + result[count].role + "</td><td>"
                  + result[count].abilities + "</td></tr>";
@@ -196,7 +207,7 @@ function toggleSetting(element) {
     let roles = [];
 
     // get the roles from loacl storage
-    if (localStorage.pandemicRoles != "")
+    if (localStorage.pandemicRoles)
         roles = JSON.parse(localStorage.pandemicRoles);
 
     // check to see if the role is in storage
@@ -213,4 +224,65 @@ function toggleSetting(element) {
     // toggle the classes for the selected card
     element.classList.toggle("checked");
     element.classList.toggle("unchecked");
+}
+
+/*********************************************************************
+* This function clears the local storage for a specific game
+**********************************************************************/
+function clearSettings() {
+    // if there is local storage for the selected game clear it out
+    if (localStorage.pandemicRoles) {
+        localStorage.removeItem('pandemicRoles');
+    }
+
+    // get an array of card elements
+    let roles = document.getElementsByClassName('roles');
+
+    // loop through the cards resetting them to unchecked
+    for (let i = 0; i < roles.length; i++) {
+        // if the card is checked
+        if (roles[i].classList.contains("checked")) {
+            // add unchecked and remove checked
+            roles[i].classList.add("unchecked");
+            roles[i].classList.remove("checked");
+        }
+    }
+
+    // create local storage for the role selection
+    if (!localStorage.pandemicRoles) {
+        localStorage.pandemicRoles = [];
+    }
+}
+
+/*********************************************************************
+* This function selects all the roles
+**********************************************************************/
+function applyAll() {
+    // get an array of card elements
+    let roleRows = document.getElementsByClassName('roles');
+
+    // loop through the cards resetting them to unchecked
+    for (let i = 0; i < roleRows.length; i++) {
+        // if the card is checked
+        if (roleRows[i].classList.contains("unchecked")) {
+            // add unchecked and remove checked
+            roleRows[i].classList.add("checked");
+            roleRows[i].classList.remove("unchecked");
+        }
+
+        // create an array to store the roles
+        let roles = [];
+
+        // get the roles from loacl storage
+        if (localStorage.pandemicRoles != "")
+            roles = JSON.parse(localStorage.pandemicRoles);
+
+        // check to see if the role is in storage
+        if (roles.indexOf(roleRows[i]) == -1) {
+            // add the role to the local stoarge list
+            roles.push(roleRows[i]);
+        }
+        // put the new roles list into local storage
+        localStorage.pandemicRoles = JSON.stringify(roles);
+    }
 }

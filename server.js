@@ -53,6 +53,8 @@ function query(query, callback) {
 app.set("port", PORT)
     // set the static path
     .use(express.static(path.join(__dirname, 'js')))
+    // set the static path
+    .use(express.static(path.join(__dirname, 'css')))
     // set the views path
     .set('views', path.join(__dirname, 'views'))
     // ste the view engine
@@ -62,7 +64,7 @@ app.set("port", PORT)
     // get all roles
     .get('/getRoles', (req, res) => {
         // create the qry string
-        const qry = `SELECT r.role_name AS role, r.abilities AS abilities, v.version_name AS version FROM pandemic_roles AS r NATURAL JOIN pandemic_version AS v`;
+        const qry = `SELECT r.role_id AS role_id, r.role_name AS role, r.abilities AS abilities, v.version_name AS version FROM pandemic_roles AS r NATURAL JOIN pandemic_version AS v`;
         
         // call the function to query the databse
         query(qry, function(error, result) {
@@ -111,7 +113,7 @@ app.set("port", PORT)
     // get the Versions
     .get('/getVersions', (req, res) => {
         // create the qry string
-        const qry = `SELECT version_name AS version FROM pandemic_version`;
+        const qry = `SELECT version_id AS version_id, version_name AS version FROM pandemic_version`;
 
         // call the function to query the databse
         query(qry, function(error, result) {
