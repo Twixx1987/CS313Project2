@@ -312,6 +312,9 @@ function applyAll() {
     }
 }
 
+/*********************************************************************
+* This function loads the host game page
+**********************************************************************/
 function loadHost() {
     // empty the main content div
     $("#mainContent").empty();
@@ -323,8 +326,80 @@ function loadHost() {
     $("#mainContent").append("<p>To host a game you first need to ensure that you have setup the character choices on the settings page. You will need to provide a Game ID to the players that will join. This ID will be provided once the game is initialized.</p>");
 
     // append the anticipated player count input field
+    $("#mainContent").append("<label for='playerCount'>Anticipated Number of Players</label>");
     $("#mainContent").append("<input type='number' id='playerCount' min=2 max=5 name='playerCount' />");
 
     // append the button to generate a game id
-    $("#mainContent").append("<br /><button class='btn btn-secondary' id='hostGame' onclick='hostGame()'>Host Game</button>");
+    $("#mainContent").append("<br /><br /><button class='btn btn-secondary' id='hostGame' onclick='hostGame()'>Host Game</button>");
+}
+
+/*********************************************************************
+* This function starts a game
+**********************************************************************/
+function hostGame() {
+    // get the host id from session storage
+    let id = sessionStorage.userid;
+
+    // get the player count from the input field
+    let playerCount = $('#playerCount').val();
+
+    // check the player count prior to sending the host game request
+    if (playerCount < 2 || playerCount > 5) {
+        // return an error
+        $('#mainContent').append("<div id='error'>The Player Count must be between 2 and 5 players.</div>");
+    }
+        // otherwise continue with processing
+    else {
+        // get the parameters for the post to database
+        let params = {
+            playerCount: playerCount,
+            id: id
+        }
+
+        // call the create game route
+        $.post("/createGame", params, (err, result) => {
+            // get the game id
+            let gameId = result.insertId;
+
+            // empty the main content div
+            $("#mainContent").empty();
+
+            // add a header to the page
+            $("#mainContent").append("<h2>Game #" + gameId + "</h2>");
+
+            // append the disclosure about hosting a game
+            $("#mainContent").append("<p>Your game has been created. You will need to provide the Game ID to the players that will join.</p>");
+
+        }).fail(function (result) {
+            $("#mainContent").text("An Error occured and the game was not created. Please try again.");
+        });
+    }
+}
+
+function login() {
+    var username = $("#username").val();
+    var password = $("#password").val();
+
+    var params = {
+        username: username,
+        password: password
+    };
+
+    $.post("/login", params, function (result) {
+        if (result && result.success) {
+            $("#status").text("Successfully logged in.");
+        } else {
+            $("#status").text("Error logging in.");
+        }
+    });
+}
+
+function logout() {
+    $.post("/logout", function (result) {
+        if (result && result.success) {
+            $("#status").text("Successfully logged out.");
+        } else {
+            $("#status").text("Error logging out.");
+        }
+    });
 }

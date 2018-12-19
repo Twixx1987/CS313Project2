@@ -11,7 +11,11 @@
     <h1 class="pagetitle container">Tracker for the Game Pandemic</h1>
     <% include ../partials/nav %>
     <div id="mainContent" class="container">
-
+	    <input type="text" id="username" placeholder="username"><br>
+        <input type="password" id="password" placeholder="password"><br>
+        <button class="btn btn-secondary" onclick="login();">Log in</button>
+        <button class="btn btn-secondary" onclick="logout();">Log out</button><br>
+        <div id="status"></div>
 	</div>
 </body>
 </html>

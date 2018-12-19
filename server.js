@@ -2,8 +2,14 @@
 // load the express module
 const express = require("express");
 
+// load bcrypt for password hashing
+const bcrypt = require('bcrypt');
+
 // load the path module
 const path = require('path');
+
+// load the body parser
+const bodyParser = require('body-parser');
 
 // load the pg module
 const { Pool } = require('pg');
@@ -59,6 +65,9 @@ app.set("port", PORT)
     .set('views', path.join(__dirname, 'views'))
     // ste the view engine
     .set('view engine', 'ejs')
+    // set the body parser settings
+    .use(bodyParser.urlencoded({ extended: false }))
+    .use(bodyParser.json())
     // set the home page of this application
     .get('/', (req, res) => res.render('pages/index'))
     // get all roles
@@ -263,6 +272,93 @@ app.set("port", PORT)
                 res.status(200).json(roleCount);
             }
         });
+    })
+    // create a game
+    .post('/createGame', (req, res) => {
+        // get the id from the url
+        const { playerCount, id } = req.body;
+
+        // create the qry string
+        const qry = 
+        `INSERT INTO pandemic_game (player_count, host_user) VALUES ($1, $2) RETURNING`;
+
+        // create the values object
+        let values = [playerCount, id];
+
+        // query the DB
+        pool.query(qry, [values], function(error, result) {
+            // Make sure we got a row data, then prepare JSON to send back
+            if (error || result == null) {
+                // send the error back
+                res.status(500).json({success: false, data: error});
+                
+                // log the error on the server
+                console.log(error);
+            } else {
+                // create a variable to store the resulting data
+                var gameId = result;
+
+                // send the data back via the response
+                res.status(200).json(gameId);
+            }
+        });
+    })
+    // login to the service
+    .post('/login', (req, res) => {
+        // get the inputs
+        const { username, password } = req.body;
+
+        // get the hashed password from the DB
+        // create the qry string
+        const qry = 
+        `SELECT password, user_id FROM pandemic_user WHERE user_name=${username}`;
+
+        // call the function to query the databse
+        query(qry, function(error, result) {
+            // Make sure we got a row data, then prepare JSON to send back
+            if (error || result == null) {
+                // send the error back
+                res.status(500).json({success: false, data: error});
+                
+                // log the error on the server
+                console.log(error);
+            } else {
+                // get the hash
+                let hash = result[0].password;
+                console.log(hash);
+
+                // compare the password
+                bcrypt.compare(password, hash, function(err, res) {
+                    if(res) {
+                        // Passwords match
+                        result.success = true;
+                        result.isLoggedIn = true;
+                        result.userid = result[0].user_id;
+                        console.log(result[0].user_id);
+                    } else {
+                        // Passwords don't match
+                    } 
+                });
+            }
+        });
+
+        res.setHeader('Content-Type', 'application/json');
+        res.send(result);
+    })
+    // log out of the service
+    .post('/logout', (req, res) => {
+    const result = {
+    success: false
+    };
+
+    if (req.session.username !== undefined && req.session.username !== '') {
+    result.success = true;
+    req.session.isLoggedIn = false;
+    req.session.destroy();
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(result);
     })
     // begin listening
     .listen(PORT, function () {
