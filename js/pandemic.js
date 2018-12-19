@@ -167,22 +167,40 @@ function selectVersion(element) {
     // get the version id
     let versionId = element.id;
 
+    // create an array to store the roles
+    let roles = [];
+
+    // get the roles from loacl storage
+    if (localStorage.pandemicRoles != "")
+        roles = JSON.parse(localStorage.pandemicRoles);
+
     // get an array of role elements
-    let roles = document.getElementsByClassName(versionId);
+    let roleRows = document.getElementsByClassName(versionId);
 
     // loop through the cards resetting them to unchecked
-    for (let i = 0; i < roles.length; i++) {
+    for (let i = 0; i < roleRows.length; i++) {
         // if the role is checked
-        if (roles[i].classList.contains("checked")) {
+        if (roleRows[i].classList.contains("checked")) {
             // add unchecked and remove checked
-            roles[i].classList.add("unchecked");
-            roles[i].classList.remove("checked");
+            roleRows[i].classList.add("unchecked");
+            roleRows[i].classList.remove("checked");
         } else {
             // add unchecked and remove checked
-            roles[i].classList.add("checked");
-            roles[i].classList.remove("unchecked");
+            roleRows[i].classList.add("checked");
+            roleRows[i].classList.remove("unchecked");
+        }
+        // check to see if the role is in storage
+        if (roles.indexOf(roleRows[i].id) != -1) {
+            // remove the role from local storage
+            roles.splice(roles.indexOf(roleRows[i].id), 1);
+        } else {
+            // add the role to the local stoarge list
+            roles.push(roleRows[i].id);
         }
     }
+
+    // put the new roles list into local storage
+    localStorage.pandemicRoles = JSON.stringify(roles);
 }
 
 /*************************************************************************
@@ -286,6 +304,13 @@ function applyAll() {
     // get an array of role elements
     let roleRows = document.getElementsByClassName('roles');
 
+    // create an array to store the roles
+    let roles = [];
+
+    // get the roles from loacl storage
+    if (localStorage.pandemicRoles != "")
+        roles = JSON.parse(localStorage.pandemicRoles);
+
     // loop through the cards resetting them to unchecked
     for (let i = 0; i < roleRows.length; i++) {
         // if the role is checked
@@ -295,21 +320,14 @@ function applyAll() {
             roleRows[i].classList.remove("unchecked");
         }
 
-        // create an array to store the roles
-        let roles = [];
-
-        // get the roles from loacl storage
-        if (localStorage.pandemicRoles != "")
-            roles = JSON.parse(localStorage.pandemicRoles);
-
         // check to see if the role is in storage
         if (roles.indexOf(roleRows[i]) == -1) {
             // add the role to the local stoarge list
-            roles.push(roleRows[i]);
+            roles.push(roleRows[i].id);
         }
-        // put the new roles list into local storage
-        localStorage.pandemicRoles = JSON.stringify(roles);
     }
+    // put the new roles list into local storage
+    localStorage.pandemicRoles = JSON.stringify(roles);
 }
 
 /*********************************************************************
